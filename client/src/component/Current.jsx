@@ -1,51 +1,195 @@
-import React, { useState } from "react";
-import { Menu } from "lucide-react";
-import {useNavigate} from "react-router-dom";
+import React, {
+  useEffect,
+  useState
+} from "react";
 
+import { Menu }
+from "lucide-react";
+
+import {
+  useNavigate
+} from "react-router-dom";
 
 function Current() {
-  const navigate = useNavigate();
-  // const openMenu = {
 
-  // }
+  const navigate =
+    useNavigate();
+
+  const [tables, setTables] =
+    useState([]);
+
+  // =====================
+  // FETCH TABLES
+  // =====================
+
+  const fetchTables = async () => {
+
+    try {
+
+      const response =
+        await fetch(
+          "http://localhost:5000/tables"
+        );
+
+      const data =
+        await response.json();
+
+      setTables(data);
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+
+    }
+
+  };
+
+  // =====================
+  // OPEN TABLE
+  // =====================
+
+  const openTable = (
+    tableNumber
+  ) => {
+
+    navigate(
+      `/menu/${tableNumber}`
+    );
+
+  };
+
+  useEffect(() => {
+
+    fetchTables();
+
+  }, []);
 
   return (
+
     <div className="orders">
+
       {/* Navbar */}
+
       <nav className="navbar">
+
         <div className="nav-left">
-          <Menu size={28} className="menu-icon" />
-          <h1>THE MOMO HUB</h1>
+
+          <Menu
+            size={28}
+            className="menu-icon"
+          />
+
+          <h1>
+            THE MOMO HUB
+          </h1>
+
         </div>
 
-        <button 
-        className="order-btn"
-        onClick={()=> navigate("/")}>NEW ORDER</button>
+        <button
+          className="order-btn"
+          onClick={() =>
+            navigate("/")
+          }
+        >
+
+          NEW ORDER
+
+        </button>
+
       </nav>
 
-      {/* Main Section */}
-      <div className="cards-container">
-        <div className="card" onClick={() => navigate("/menu")}>1</div>
-        <div className="card" onClick={() => navigate("/menu")}>2</div>
-        <div className="card" onClick={() => navigate("/menu")}>3</div>
-        <div className="card" onClick={() => navigate("/menu")}>4</div>
-      </div>
-      {/* Divider */}
-        <div className="divider"></div>
+      {/* Top Cards */}
 
-        {/* More Cards */}
-        <div className="more-cards">
-        <div className="card" onClick={()=> openMenu(table)}></div>
-        <div className="card"></div>
-        <div className="card"></div>
-        <div className="card"></div>
-        <div className="card"></div>
-        <div className="card"></div>
-        <div className="card"></div>
-        <div className="card"></div>
-        </div>
+      <div className="cards-container">
+
+        {tables
+          .slice(0, 4)
+          .map((table) => (
+
+            <div
+
+              key={
+                table.table_number
+              }
+              onClick={() =>
+                  openTable(
+                    table.table_number
+                  )
+                }
+
+              className={`card ${
+                table.status ===
+                "AVAILABLE"
+
+                  ? "available-card"
+
+                  : "occupied-card"
+              }`}
+            >
+
+              <h2>
+                {
+                  table.table_number
+                }
+              </h2>
+
+              
+            </div>
+
+          ))}
+
+      </div>
+
+      {/* Divider */}
+
+      <div className="divider"></div>
+
+      {/* Bottom Cards */}
+
+      <div className="more-cards">
+
+        {tables
+          .slice(4)
+          .map((table) => (
+
+            <div
+
+              key={
+                table.table_number
+              }
+              onClick={() =>
+                  openTable(
+                    table.table_number
+                  )
+                }
+
+              className={`card ${
+                table.status ===
+                "AVAILABLE"
+
+                  ? "available-card"
+
+                  : "occupied-card"
+              }`}
+            >
+
+              <h2>
+                {
+                  table.table_number
+                }
+              </h2>
+            </div>
+
+          ))}
+
+      </div>
+
     </div>
+
   );
+
 }
 
 export default Current;

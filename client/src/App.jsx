@@ -15,7 +15,7 @@ function App(){
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element = {<Current />}/>
-                        <Route path="/menu" element = {<Order />} />
+                        <Route path="/menu/:tableNumber" element={<Order />}/>
                     </Routes>
                 </BrowserRouter>
 

@@ -1,90 +1,294 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
-import { categories, foods } from "../data";
 import { useNavigate } from "react-router-dom";
-
+import {useParams} from "react-router-dom";
 function Order() {
 
-  const [selectedCategory, setSelectedCategory] =
-    useState("Momos");
-
-  const [billItems, setBillItems] =
-    useState([]);
-
-  const [selectedFood, setSelectedFood] =
-    useState(null);
-
-  const [showModal, setShowModal] =
-    useState(false);
-
-  const [currentOptions, setCurrentOptions] =
-    useState([]);
-  const [addFoodOption, setAddFoodOption] = useState([]);
-
-  const [tableNumber] = useState(1);
-  const [selectedOptionBtn, setSelectedOptionBtn] = useState("");
-
-  const [quantity, setQuantity] = useState(1);
-  const navigate = useNavigate()
+  // =========================
+  // STATES
+  // =========================
   
+  const [categories, setCategories] =
+    useState([]);
+
+  const [foods, setFoods] =
+    useState([]);
+    
+    const [foodOptions, setFoodOptions] =
+    useState([]);
+    
+  const [selectedCategory, setSelectedCategory] =
+  useState("");
+  const [selectedCategoryName, setSelectedCategoryName] =
+    useState("");
+
+    const [billItems, setBillItems] =
+    useState([]);
+    
+    const [selectedFood, setSelectedFood] =
+    useState(null);
+    
+    const [showModal, setShowModal] =
+    useState(false);
+    
+    const [currentOptions, setCurrentOptions] =
+    useState([]);
+    
+    const [addFoodOption, setAddFoodOption] =
+    useState(null);
+    
+    const [selectedOptionBtn, setSelectedOptionBtn] =
+    useState("");
+    
+    const [quantity, setQuantity] =
+    useState(1);
+    
+    const navigate = useNavigate();
+    
+    const { tableNumber } = useParams();
+    // =========================
+    // FETCH DATA
+    // =========================
+    
+  const fetchData = async () => {
+
+    try {
+
+      // =====================
+      // CATEGORIES
+      // =====================
+
+      const categoriesRes =
+        await fetch(
+          "http://localhost:5000/categories"
+        );
+
+      const categoriesData =
+        await categoriesRes.json();
+
+      setCategories(categoriesData);
+
+      // Default selected category
+
+      if (
+        categoriesData.length > 0
+      ) {
+
+        setSelectedCategory(
+          categoriesData[0]
+            .category_id
+        );
+        setSelectedCategoryName(
+          categoriesData[0]
+          .category_name
+        )
+      }
+
+      // =====================
+      // FOODS
+      // =====================
+
+      const foodsRes =
+        await fetch(
+          "http://localhost:5000/foods"
+        );
+
+      const foodsData =
+        await foodsRes.json();
+
+      setFoods(foodsData);
+      
+
+      // =====================
+      // FOOD OPTIONS
+      // =====================
+
+      const foodOptionsRes =
+        await fetch(
+          "http://localhost:5000/food-options"
+        );
+
+      const foodOptionsData =
+        await foodOptionsRes.json();
+
+      setFoodOptions(
+        foodOptionsData
+      );
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+
+    }
+
+  };
+
+  // =========================
+  // USE EFFECT
+  // =========================
+
+  useEffect(() => {
+    fetchData();
+
+  }, []);
+
   // =========================
   // FILTER FOODS
   // =========================
 
-  const filteredFoods = foods.filter(
-    (food) =>
-      food.category === selectedCategory
-  );
+  const filteredFoods =
+    foods.filter(
+      (food) =>
+        food.category_id ===
+        selectedCategory
+    );
 
   // =========================
   // OPEN FOOD OPTIONS
   // =========================
 
-  const openFoodOptions = (food) => {
+  const openFoodOptions = (
+    food
+  ) => {
 
     setSelectedFood(food);
+
     setQuantity(1);
-    const currentCategory =
-      categories.find(
-        (cat) =>
-          cat.name === food.category
-      );
+
+    setSelectedOptionBtn("");
+
+    setAddFoodOption(null);
+
+    // =====================
+    // FIND OPTIONS
+    // =====================
 
     const options =
-      currentCategory?.options || [];
+      foodOptions.filter(
+        (option) =>
+          option.category_id ===
+          food.category_id
+      );
+
+    // =====================
+    // SHOW MODAL
+    // =====================
 
     setCurrentOptions(options);
-    setSelectedOptionBtn("");
+
     setShowModal(true);
+
   };
 
   // =========================
   // ADD FOOD WITH OPTION
   // =========================
 
-  const addFoodWithType = (addFoodOption) => {
-    const finalPrice = (
-      (selectedFood.price + addFoodOption.extra) * quantity
-    )
+  // =========================
+// ADD FOOD WITH OPTION
+// =========================
+
+const addFoodWithType = (
+  addFoodOption
+) => {
+
+  // =====================
+  // CHECK OPTION REQUIRED
+  // =====================
+
+  if (
+    currentOptions.length > 0 &&
+    !addFoodOption
+  ) {
+
+    alert(
+      "Please select an option"
+    );
+
+    return;
+  }
+
+  // =====================
+  // WITHOUT OPTIONS
+  // =====================
+
+  if (!addFoodOption) {
+
+    const finalPrice =
+      foodPrice(selectedFood)
+      * quantity;
 
     const updatedFood = {
 
       ...selectedFood,
 
-      selectedOption: addFoodOption.name,
+      selectedOption: "",
+
+      option_id: null,
 
       finalPrice,
 
       qty: quantity
     };
-
-    setBillItems([
-      ...billItems,
+      
+      setBillItems([
+        ...billItems,
       updatedFood
     ]);
 
     setShowModal(false);
-    setAddFoodOption("");
+
+    return;
+  }
+
+  // =====================
+  // WITH OPTIONS
+  // =====================
+
+  const finalPrice =
+    (
+      foodPrice(selectedFood) +
+      addFoodOption.extra_price
+    ) * quantity;
+    
+    const updatedFood = {
+  
+      ...selectedFood,
+  
+      selectedOption:
+        addFoodOption.option_name,
+  
+      option_id:
+        addFoodOption.option_id,
+  
+      finalPrice,
+  
+      qty: quantity
+    };
+
+  setBillItems([
+    ...billItems,
+    updatedFood
+  ]);
+
+  setShowModal(false);
+
+  setAddFoodOption(null);
+
+};
+
+  // =========================
+  // FOOD PRICE HELPER
+  // =========================
+
+  const foodPrice = (
+    food
+  ) => {
+
+    return Number(food.price);
+
   };
 
   // =========================
@@ -101,14 +305,74 @@ function Order() {
         ),
       0
     );
+    const saveBill = async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            "http://localhost:5000/bills",
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json"
+
+              },
+
+              body: JSON.stringify({
+
+                table_number:
+                  tableNumber,
+
+                customer_name:
+                  "",
+
+                description:
+                  "",
+
+                parcel: false,
+
+                total_cost:
+                  totalPrice,
+
+                items: billItems
+
+              })
+
+            }
+          );
+
+        const data =
+          await response.json();
+
+        console.log(data);
+
+        alert(
+          "Bill Saved"
+        );
+        navigate("/");
+
+      }
+
+      catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
 
   return (
 
     <div className="orders">
 
-      {/* =========================
+      {/* =====================
           NAVBAR
-      ========================= */}
+      ===================== */}
 
       <nav className="navbar">
 
@@ -125,104 +389,140 @@ function Order() {
 
         </div>
 
-        <button className="order-btn" onClick={()=> navigate("/")}>
+        <button
+          className="order-btn"
+          onClick={() =>
+            navigate("/")
+          }
+        >
+
           NEW ORDER
+
         </button>
 
       </nav>
 
-      {/* =========================
+      {/* =====================
           MAIN LAYOUT
-      ========================= */}
+      ===================== */}
 
       <div className="main-layout">
 
-        {/* =========================
-            LEFT CATEGORY PANEL
-        ========================= */}
+        {/* =====================
+            CATEGORIES
+        ===================== */}
 
         <div className="categories">
 
-          {categories.map((category) => (
+          {categories.map(
+            (category) => (
 
-            <div
-              key={category.id}
-              className={`category ${
-                selectedCategory ===
-                category.name
-                  ? "active-category"
-                  : ""
-              }`}
-              onClick={() =>
-                setSelectedCategory(
-                  category.name
-                )
-              }
-            >
+              <div
+                key={
+                  category.category_id
+                }
 
-              {category.name}
+                className={`category ${
+                  selectedCategoryName ===
+                  category.category_name
+                    ? "active-category"
+                    : ""
+                }`}
 
-            </div>
+                onClick={() =>{
+                  setSelectedCategory(
+                    category.category_id
+                  )
+                  setSelectedCategoryName(category.category_name)
+                }
+                }
+              >
 
-          ))}
+                {
+                  category.category_name
+                }
+
+              </div>
+
+            )
+          )}
 
         </div>
 
-        {/* =========================
+        {/* =====================
             FOOD SECTION
-        ========================= */}
+        ===================== */}
 
         <div className="food-section">
 
           <h2 className="section-title">
-            {selectedCategory}
+
+            {selectedCategoryName}
+
           </h2>
 
           <div className="food-grid">
 
-            {filteredFoods.map((food) => (
+            {filteredFoods.map(
+              (food) => (
 
-              <div
-                className="food-card"
-                key={food.id}
-                onClick={() =>
-                  openFoodOptions(food)
-                }
-              >
+                <div
+                  className="food-card"
 
-                <div className="food-content">
+                  key={
+                    food.food_id
+                  }
 
-                  <div className="title-price">
+                  onClick={() =>
+                    openFoodOptions(
+                      food
+                    )
+                  }
+                >
 
-                    <h3>
-                      {food.title}
-                    </h3>
+                  <div className="food-content">
 
-                    <span>
-                      ₹{food.price}
-                    </span>
+                    <div className="title-price">
+
+                      <h3>
+                        {
+                          food.food_name
+                        }
+                      </h3>
+
+                      <span>
+
+                        ₹
+                        {food.price}
+
+                      </span>
+
+                    </div>
+
+                    <div className="food-line"></div>
+
+                    <p className="food-para">
+
+                      {
+                        food.food_description
+                      }
+
+                    </p>
 
                   </div>
 
-                  <div className="food-line"></div>
-
-                  <p className="food-para">
-                    {food.para}
-                  </p>
-
                 </div>
 
-              </div>
-
-            ))}
+              )
+            )}
 
           </div>
 
         </div>
 
-        {/* =========================
+        {/* =====================
             BILL SECTION
-        ========================= */}
+        ===================== */}
 
         <div className="bill-section">
 
@@ -320,10 +620,11 @@ function Order() {
 
                     <span>
 
-                      {item.title}
+                      {item.food_name}
 
-                      {item.selectedOption &&
-                        ` (${item.selectedOption})`
+                      {item.selectedOption
+                        ? ` (${item.selectedOption})`
+                        : ``
                       }
 
                     </span>
@@ -335,9 +636,9 @@ function Order() {
                     <span>
 
                       ₹
+
                       {
-                        item.finalPrice ||
-                        item.price
+                        item.finalPrice
                       }
 
                     </span>
@@ -373,7 +674,7 @@ function Order() {
               BILL & PRINT
             </button>
 
-            <button>
+            <button onClick={saveBill}>
               BILL
             </button>
 
@@ -391,9 +692,9 @@ function Order() {
 
       </div>
 
-      {/* =========================
-          FOOD OPTIONS MODAL
-      ========================= */}
+      {/* =====================
+          MODAL
+      ===================== */}
 
       {showModal && (
 
@@ -402,81 +703,102 @@ function Order() {
           <div className="food-modal">
 
             <h2>
-              {selectedFood.title}
+
+              {
+                selectedFood.food_name
+              }
+
             </h2>
+
+            {/* OPTIONS */}
 
             <div className="food-options">
 
-            {currentOptions.map(
-              (option, index) => (
+              {currentOptions.map(
+                (
+                  option,
+                  index
+                ) => (
 
-                <button
-                  key={index}
+                  <button
+                    key={index}
 
-                  className={`option-btn ${
-                    selectedOptionBtn === option.name
-                      ? "active-option"
-                      : ""
-                  }`}
+                    className={`option-btn ${
+                      selectedOptionBtn ===
+                      option.option_name
+                        ? "active-option"
+                        : ""
+                    }`}
 
-                  onClick={() => {
+                    onClick={() => {
 
-                    setSelectedOptionBtn(
-                      option.name
-                    );
+                      setSelectedOptionBtn(
+                        option.option_name
+                      );
 
-                    setAddFoodOption(option);
-                    
-                  }}
-                >
+                      setAddFoodOption(
+                        option
+                      );
 
-                  {option.name}
-                  <br />
-                  {option.extra > 0 &&
-                    ` (+₹${option.extra})`
-                  }
+                    }}
+                  >
 
-                </button>
+                    {
+                      option.option_name
+                    }
 
-              )
-            )}
+                    <br />
 
-          </div>
+                    {option.extra_price > 0 &&
+                      `(+₹${option.extra_price})`
+                    }
+
+                  </button>
+
+                )
+              )}
+
+            </div>
+
+            {/* QUANTITY */}
+
             <div className="quantity-box">
 
-            <button
-              onClick={() =>
-                quantity > 1 &&
-                setQuantity(quantity - 1)
-              }
-            >
-              -
-            </button>
+              <button
+                onClick={() =>
+                  quantity > 1 &&
+                  setQuantity(
+                    quantity - 1
+                  )
+                }
+              >
+                -
+              </button>
 
-            <span>
-              {quantity}
-            </span>
+              <span>
+                {quantity}
+              </span>
+              <button
+                onClick={() =>
+                  setQuantity(
+                    quantity + 1
+                  )
+                }
+              >
+                +
+              </button>
+            </div>
 
-            <button
-              onClick={() =>
-                setQuantity(quantity + 1)
-              }
-            >
-              +
-            </button>
-
-          </div>
-            
-            
+            {/* BUTTONS */}
             <button
               className="close-btn"
               onClick={() =>
-                addFoodWithType(addFoodOption)
+                addFoodWithType(
+                  addFoodOption
+                )
               }
             >
-
               ORDER
-
             </button>
             <button
               className="close-btn"
@@ -484,19 +806,12 @@ function Order() {
                 setShowModal(false)
               }
             >
-
               CLOSE
-
             </button>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }
-
 export default Order;

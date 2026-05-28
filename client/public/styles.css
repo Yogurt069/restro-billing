@@ -590,6 +590,38 @@ DESCRIPTION
   font-weight: bold;
 }
 
+.available-card {
+
+  border: 4px solid #00ff88;
+
+}
+
+.occupied-card {
+
+  border: 4px solid #ff3b3b;
+
+}
+
+.view-btn {
+
+  margin-top: 15px;
+
+  padding: 8px 18px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: white;
+
+  color: black;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

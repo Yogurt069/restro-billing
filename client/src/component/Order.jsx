@@ -68,7 +68,7 @@ function Order() {
 
       const tablesRes =
         await fetch(
-          "http://localhost:5001/tables"
+          "https://restro-billing-yogurt-co.onrender.com/tables"
         );
 
       const tablesData =
@@ -82,7 +82,7 @@ function Order() {
 
       const categoriesRes =
         await fetch(
-          "http://localhost:5001/categories"
+          "https://restro-billing-yogurt-co.onrender.com/categories"
         );
 
       const categoriesData =
@@ -112,7 +112,7 @@ function Order() {
 
       const foodsRes =
         await fetch(
-          "http://localhost:5001/foods"
+          "https://restro-billing-yogurt-co.onrender.com/foods"
         );
 
       const foodsData =
@@ -126,7 +126,7 @@ function Order() {
 
       const foodOptionsRes =
         await fetch(
-          "http://localhost:5001/food-options"
+          "https://restro-billing-yogurt-co.onrender.com/food-options"
         );
 
       const foodOptionsData =
@@ -142,7 +142,7 @@ function Order() {
 
       const billRes =
         await fetch(
-          `http://localhost:5001/table-orders/${tableNumber}`
+          `https://restro-billing-yogurt-co.onrender.com/table-orders/${tableNumber}`
         );
 
       const billData =
@@ -401,7 +401,7 @@ const addFoodWithType = (
 
         const response =
           await fetch(
-            "http://localhost:5001/bill",
+            "https://restro-billing-yogurt-co.onrender.com/bill",
             {
               method: "POST",
               headers: {
@@ -448,7 +448,7 @@ const addFoodWithType = (
 
         const response =
           await fetch(
-            "http://localhost:5001/kot",
+            "https://restro-billing-yogurt-co.onrender.com/kot",
             {
 
               method: "POST",

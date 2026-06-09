@@ -1,198 +1,122 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
-
-import { Menu }
-from "lucide-react";
-
-import {
-  useNavigate
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Current() {
+  const navigate = useNavigate();
 
-  const navigate =
-    useNavigate();
-
-  const [tables, setTables] =
-    useState([]);
-
-  // =====================
-  // FETCH TABLES
-  // =====================
+  const [tables, setTables] = useState([]);
 
   const fetchTables = async () => {
-
     try {
+      const response = await fetch(
+        "http://localhost:5001/tables"
+      );
 
-      const response =
-        await fetch(
-          "http://localhost:5000/tables"
-        );
+      const data = await response.json();
 
-      const data =
-        await response.json();
+      console.log("Tables:", data);
 
       setTables(data);
-
+    } catch (err) {
+      console.error("Error fetching tables:", err);
     }
-
-    catch (err) {
-
-      console.log(err);
-
-    }
-
   };
 
-  // =====================
-  // OPEN TABLE
-  // =====================
-
-  const openTable = (
-    tableNumber
-  ) => {
-
-    navigate(
-      `/menu/${tableNumber}`
-    );
-
+  const openTable = (tableNumber) => {
+    navigate(`/menu/${tableNumber}`);
   };
 
   useEffect(() => {
-
     fetchTables();
-
   }, []);
 
   return (
-
     <div className="orders">
-
       {/* Navbar */}
 
       <nav className="navbar">
-
         <div className="nav-left">
-
           <Menu
             size={28}
             className="menu-icon"
           />
 
-          <h1>
-            THE MOMO HUB
-          </h1>
-
+          <h1>THE MOMO HUB</h1>
         </div>
 
         <button
           className="order-btn"
-          onClick={() =>
-            navigate("/")
-          }
+          onClick={() => navigate("/")}
         >
-
           NEW ORDER
-
         </button>
-
       </nav>
-
-      {/* Top Cards */}
 
       {/* TOP TABLES */}
 
       <div className="cards-container">
-
         {tables
-          .filter((table) =>
-            !table.table_number.startsWith("P")
+          .filter(
+            (table) =>
+              !String(
+                table.table_number
+              ).startsWith("P")
           )
-          .slice(0, 4)
           .map((table) => (
-
             <div
-
               key={table.table_number}
-
               onClick={() =>
                 openTable(
                   table.table_number
                 )
               }
-
               className={`card ${
-                table.status ===
-                "AVAILABLE"
-
+                table.status === "AVAILABLE"
                   ? "available-card"
-
                   : "occupied-card"
               }`}
             >
-
-              <h2>
-                {table.table_number}
-              </h2>
-
+              <h2>{table.table_number}</h2>
             </div>
-
           ))}
-
       </div>
 
-            {/* Divider */}
+      {/* Divider */}
 
       <div className="divider"></div>
 
-      {/* Bottom Cards */}
       {/* PARCELS */}
 
       <div className="more-cards">
-
         {tables
           .filter((table) =>
-            table.table_number.startsWith("P")
+            String(
+              table.table_number
+            ).startsWith("P")
           )
-          .slice(0, 8)
+          
           .map((table) => (
-
             <div
-
               key={table.table_number}
-
               onClick={() =>
                 openTable(
                   table.table_number
                 )
               }
-
               className={`card ${
-                table.status ===
-                "AVAILABLE"
-
+                table.status === "AVAILABLE"
                   ? "available-card"
-
                   : "occupied-card"
               }`}
             >
-
-              <h2>
-                {table.table_number}
-              </h2>
-
+              <h2>{table.table_number}</h2>
             </div>
-
           ))}
-
       </div>
-
     </div>
-
   );
-
 }
 
 export default Current;
+

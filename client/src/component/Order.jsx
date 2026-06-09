@@ -45,6 +45,11 @@ function Order() {
     
     const [quantity, setQuantity] =
     useState(1);
+    const [customerName, setCustomerName] = useState("");
+    const [showConfirm, setShowConfirm] =useState(false);
+
+    const [description, setDescription] =useState("");
+    const [transferTable,setTransferTable] = useState("");
     
     const navigate = useNavigate();
     
@@ -57,33 +62,33 @@ function Order() {
 
     try {
 
+      // =====================
+      // TABLES
+      // =====================
+
       const tablesRes =
-      await fetch(
-        "http://localhost:5000/tables"
-      );
+        await fetch(
+          "http://localhost:5001/tables"
+        );
 
-    const tablesData =
-      await tablesRes.json();
+      const tablesData =
+        await tablesRes.json();
 
-    setTables(tablesData);
-
+      setTables(tablesData);
 
       // =====================
       // CATEGORIES
       // =====================
 
-
       const categoriesRes =
         await fetch(
-          "http://localhost:5000/categories"
+          "http://localhost:5001/categories"
         );
 
       const categoriesData =
         await categoriesRes.json();
 
       setCategories(categoriesData);
-
-      // Default selected category
 
       if (
         categoriesData.length > 0
@@ -93,10 +98,12 @@ function Order() {
           categoriesData[0]
             .category_id
         );
+
         setSelectedCategoryName(
           categoriesData[0]
-          .category_name
-        )
+            .category_name
+        );
+
       }
 
       // =====================
@@ -105,14 +112,13 @@ function Order() {
 
       const foodsRes =
         await fetch(
-          "http://localhost:5000/foods"
+          "http://localhost:5001/foods"
         );
 
       const foodsData =
         await foodsRes.json();
 
       setFoods(foodsData);
-      
 
       // =====================
       // FOOD OPTIONS
@@ -120,7 +126,7 @@ function Order() {
 
       const foodOptionsRes =
         await fetch(
-          "http://localhost:5000/food-options"
+          "http://localhost:5001/food-options"
         );
 
       const foodOptionsData =
@@ -128,6 +134,75 @@ function Order() {
 
       setFoodOptions(
         foodOptionsData
+      );
+
+      // =====================
+      // EXISTING BILL
+      // =====================
+
+      const billRes =
+        await fetch(
+          `http://localhost:5001/table-orders/${tableNumber}`
+        );
+
+      const billData =
+        await billRes.json();
+        console.log(billData.bill.parcel);
+        console.log(typeof billData.bill.parcel);
+      console.log("TABLE DATA");
+      console.log(billData);
+      if (billData.bill) {
+
+        setCustomerName(
+          billData.bill.customer_name || ""
+        );
+
+        setDescription(
+          billData.bill.description || ""
+        );
+
+        setParcel(
+          billData.bill.parcel === 1
+        );
+
+      }
+
+      // =====================
+      // EXISTING ORDERS
+      // =====================
+
+      const loadedOrders =
+        (billData.orders || []).map(
+          order => ({
+
+            food_id:
+              order.food_id,
+
+            food_name:
+              order.food_name,
+
+            option_id:
+              order.option_id,
+
+            selectedOption:
+              order.option_name || "",
+
+            qty:
+              order.quantity,
+
+            price:
+              order.unit_price,
+
+            finalPrice:
+              order.total_price,
+
+            isNew: false
+
+          })
+        );
+
+      setBillItems(
+        loadedOrders
       );
 
     }
@@ -236,16 +311,21 @@ const addFoodWithType = (
       * quantity;
 
     const updatedFood = {
-
       ...selectedFood,
 
-      selectedOption: "",
+      selectedOption: addFoodOption
+        ? addFoodOption.option_name
+        : "",
 
-      option_id: null,
+      option_id: addFoodOption
+        ? addFoodOption.option_id
+        : null,
 
       finalPrice,
 
-      qty: quantity
+      qty: quantity,
+
+      isNew: true
     };
       
       setBillItems([
@@ -258,6 +338,7 @@ const addFoodWithType = (
     return;
   }
 
+
   // =====================
   // WITH OPTIONS
   // =====================
@@ -269,19 +350,13 @@ const addFoodWithType = (
     ) * quantity;
     
     const updatedFood = {
-  
-      ...selectedFood,
-  
-      selectedOption:
-        addFoodOption.option_name,
-  
-      option_id:
-        addFoodOption.option_id,
-  
-      finalPrice,
-  
-      qty: quantity
-    };
+  ...selectedFood,
+  selectedOption:addFoodOption.option_name,
+  option_id:addFoodOption.option_id,
+  finalPrice,
+  qty: quantity,
+  isNew: true
+};
 
   setBillItems([
     ...billItems,
@@ -320,57 +395,36 @@ const addFoodWithType = (
         ),
       0
     );
-    const saveBill = async () => {
+    const generateBill = async () => {
 
       try {
 
         const response =
           await fetch(
-            "http://localhost:5000/bills",
+            "http://localhost:5001/bill",
             {
-
               method: "POST",
-
               headers: {
-
                 "Content-Type":
                   "application/json"
-
               },
-
               body: JSON.stringify({
-
-                table_number:
-                  parcel
-                    ? null
-                    : tableNumber,
-
-                customer_name:
-                  "",
-
-                description:
-                  "",
-
-                parcel: parcel,
-
-                total_cost:
-                  totalPrice,
-
+                tableNumber,
+                customerName,
+                description,
+                parcel,
                 items: billItems
 
               })
-
             }
           );
 
-        const data =
-          await response.json();
+        const data = await response.json();
 
         console.log(data);
 
-        alert(
-          "Bill Saved"
-        );
+     
+
         navigate("/");
 
       }
@@ -382,6 +436,69 @@ const addFoodWithType = (
       }
 
     };
+    const sendKOT = async () => {
+
+      try {
+
+        const newItems =
+          billItems.filter(
+            item => item.isNew
+          );
+
+
+        const response =
+          await fetch(
+            "http://localhost:5001/kot",
+            {
+
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body: JSON.stringify({
+                tableNumber,
+                transferTable,
+                customerName,
+                parcel,
+                description,
+                items: newItems
+              })
+
+            }
+          );
+
+        const data =
+          await response.json();
+
+        console.log(data);
+
+        if (data.success) {
+
+          setBillItems(prev =>
+            prev.map(item => ({
+              ...item,
+              isNew: false
+            }))
+          );
+
+        
+
+        }
+        navigate("/");
+
+      }
+
+      catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
+    
 
   return (
 
@@ -553,35 +670,37 @@ const addFoodWithType = (
 
             <div className="bill-info">
 
-  <h3>
-    TABLE NO :
-    {" "}
-    {tableNumber}
-  </h3>
+              <h3>
+                TABLE NO :
+                {" "}
+                {tableNumber}
+              </h3>
 
-  <div className="parcel-box">
+              <div className="parcel-box">
 
-    <h3>
-      PARCEL :
-    </h3>
+                <h3>
+                  PARCEL :
+                </h3>
 
-    <select
-      className="transfer-select"
-    >
+                <select
+                  className="transfer-select"
+                  value={parcel ? "true" : "false"}
+                  onChange={(e) =>
+                    setParcel(
+                      e.target.value === "true"
+                    )
+                  }>
+                  <option value="false">
+                    NO
+                  </option>
 
-      <option>
-        NO
-      </option>
+                  <option value="true">
+                    YES
+                  </option>
+                </select>              
+              </div>
 
-      <option>
-        YES
-      </option>
-
-    </select>
-
-  </div>
-
-</div>
+            </div>
 
             <div className="bill-name-transfer">
 
@@ -589,7 +708,56 @@ const addFoodWithType = (
                 type="text"
                 placeholder="Customer Name"
                 className="bill-input"
+                value={customerName}
+                onChange={(e) =>
+                  setCustomerName(
+                    e.target.value
+                  )
+                }
               />
+
+              <select
+                className="transfer-select"
+                value={transferTable}
+                onChange={(e) =>
+                  setTransferTable(
+                    e.target.value
+                  )
+                }
+              >
+
+                <option value="">
+                  Transfer To
+                </option>
+
+                {tables
+                  .filter(
+                    table =>
+                      table.status ===
+                        "AVAILABLE" &&
+                      table.table_number !==
+                        tableNumber
+                  )
+                  .map(table => (
+
+                    <option
+                      key={
+                        table.table_number
+                      }
+                      value={
+                        table.table_number
+                      }
+                    >
+
+                      {
+                        table.table_number
+                      }
+
+                    </option>
+
+                  ))}
+
+              </select>
 
             </div>
 
@@ -606,7 +774,13 @@ const addFoodWithType = (
             <textarea
               placeholder="Optional description..."
               className="description-input"
-            ></textarea>
+              value={description}
+              onChange={(e) =>
+                setDescription(
+                  e.target.value
+                )
+              }
+            />
 
           </div>
 
@@ -689,21 +863,24 @@ const addFoodWithType = (
 
           <div className="bill-buttons">
 
-            <button>
-              BILL & PRINT
-            </button>
-
-            <button onClick={saveBill}>
-              BILL
-            </button>
-
-            <button>
+            <button onClick={sendKOT}>
               KOT
             </button>
 
             <button>
               KOT & PRINT
             </button>
+            <button>
+              BILL & PRINT
+            </button>
+
+            <button
+              onClick={() =>
+                setShowConfirm(true)
+              }>
+              BILL
+            </button>
+
 
           </div>
 
@@ -829,6 +1006,60 @@ const addFoodWithType = (
             </button>
           </div>
         </div>
+      )}
+
+      {showConfirm && (
+
+        <div className="modal-overlay">
+
+          <div className="confirm-modal">
+
+            <h2>
+              Generate Bill?
+            </h2>
+
+            <p>
+              Are you sure you want
+              to generate the bill?
+              This will close the
+              table and mark it as
+              available.
+            </p>
+
+            <div className="confirm-buttons">
+
+              <button
+                className="confirm-yes"
+                onClick={() => {
+
+                  setShowConfirm(
+                    false
+                  );
+
+                  generateBill();
+
+                }}
+              >
+                YES
+              </button>
+
+              <button
+                className="confirm-no"
+                onClick={() =>
+                  setShowConfirm(
+                    false
+                  )
+                }
+              >
+                CANCEL
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
       )}
     </div>
   );

@@ -1,12 +1,8 @@
-import Database from "better-sqlite3"
-const db = new Database("cafe.db")
+import Database from "better-sqlite3";
 
-db.prepare(`
-            INSERT INTO tables
-            (table_number, status)
+const db = new Database("cafe.db");
 
-            VALUES
-            ('P6', 'AVAILABLE');
-            ('P7', 'AVAILABLE');
-            ('P8', 'AVAILABLE');
-        `).run()
+const stmt = db.prepare("SELECT * FROM tables");
+const rows = stmt.all();
+
+console.log(rows);

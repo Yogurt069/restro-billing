@@ -7,17 +7,17 @@ try {
     db.exec(`
         CREATE TABLE IF NOT EXISTS bills(
         bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        table_number INTEGER,
+        table_number VARCHAR(15),
         customer_name VARCHAR(45),
         description TEXT,
         parcel BOOLEAN DEFAULT FALSE,
-        status TEXT,
+        status TEXT DEFAULT 'ACTIVE',
         total_cost INTEGER,
         created_at TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS categories(
         category_id INTEGER PRIMARY KEY,
-        category_name varchar(15)
+        category_name VARCHAR(15)
     );
     CREATE TABLE IF NOT EXISTS foods(
         food_id INTEGER PRIMARY KEY,
@@ -28,7 +28,7 @@ try {
     );
     CREATE TABLE IF NOT EXISTS food_options(
         option_id INTEGER PRIMARY KEY,
-        option_name varchar(15),
+        option_name VARCHAR(15),
         category_id INTEGER REFERENCES categories(category_id),
         extra_price INTEGER
     );
@@ -42,6 +42,7 @@ try {
         food_id INTEGER REFERENCES foods(food_id),
         bill_id INTEGER REFERENCES bills(bill_id),
         option_id INTEGER REFERENCES food_options(option_id),
+        kot_sent BOOLEAN DEFAULT FALSE,
         quantity INTEGER,
         unit_price INTEGER,
         total_price INTEGER,

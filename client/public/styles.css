@@ -10,16 +10,16 @@
 }
 
 body {
-  background: #000;
-  color: white;
+  background: #f5f5f5;
+  color: #111111;
   overflow-x: hidden;
 }
 
 .orders {
   width: 100%;
   min-height: 100vh;
-  background: #000;
-  color: white;
+  background: #f5f5f5;
+  color: #111111;
 }
 
 /* =========================
@@ -29,12 +29,16 @@ body {
 .navbar {
   width: 100%;
   height: 80px;
-  border-bottom: 2px solid white;
+  border-bottom: 1.5px solid #333333;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  background: #000;
+  background: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
 }
 
 .nav-left {
@@ -44,7 +48,7 @@ body {
 }
 
 .menu-icon {
-  color: white;
+  color: #111111;
   cursor: pointer;
 }
 
@@ -52,6 +56,7 @@ body {
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 1px;
+  color: #000000;
 }
 
 /* =========================
@@ -60,19 +65,20 @@ body {
 
 .order-btn {
   padding: 12px 26px;
-  border: 3px solid white;
+  border: 1.5px solid #aaaaaa;
   border-radius: 14px;
-  background: transparent;
-  color: white;
+  background: #e8e8e8;
+  color: #111111;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
 
 .order-btn:hover {
-  background: white;
-  color: black;
+  background: #111111;
+  color: #f5f5f5;
+  border-color: #111111;
 }
 
 /* =========================
@@ -97,28 +103,29 @@ body {
 
 .card {
   height: 170px;
-  border: 4px solid white;
+  border: 1.5px solid #333333;
   border-radius: 30px;
-  background: #111;
+  background: #e8e8e8;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 35px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card:hover {
   transform: translateY(-8px);
-  background: #1c1c1c;
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  background: #d8d8d8;
+  border-color: #666;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .divider {
   width: 92%;
-  height: 2px;
-  background: white;
+  height: 1px;
+  background: #333333;
   margin: 20px auto 60px;
 }
 
@@ -138,7 +145,7 @@ body {
 
 .categories {
   width: 16%;
-  border-right: 2px solid white;
+  border-right: 1.5px solid #333333;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -146,24 +153,26 @@ body {
 
 .category {
   min-height: 85px;
-  border-bottom: 2px solid white;
+  border-bottom: 1.5px solid #333333;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+  color: #333333;
 }
 
 .category:hover {
-  background: white;
-  color: black;
+  background: #d8d8d8;
+  color: #000000;
 }
 
 .active-category {
-  background: white;
-  color: black;
+  background: #d8d8d8;
+  color: #000000;
+  border-left: 3px solid #000000;
 }
 
 /* =========================
@@ -173,7 +182,7 @@ body {
 .food-section {
   width: 54%;
   padding: 30px;
-  border-right: 2px solid white;
+  border-right: 1.5px solid #333333;
   overflow-y: auto;
 }
 
@@ -181,6 +190,7 @@ body {
   font-size: 28px;
   margin-bottom: 30px;
   font-weight: 700;
+  color: #000000;
 }
 
 .food-grid {
@@ -194,18 +204,20 @@ body {
 ========================= */
 
 .food-card {
-  background: #111;
-  border: 2px solid white;
-  border-radius: 25px;
+  background: #e8e8e8;
+  border: 1.5px solid #333333;
+  border-radius: 20px;
   overflow: hidden;
-  transition: 0.3s ease;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
   height: 130px;
 }
 
 .food-card:hover {
   transform: translateY(-5px);
-  background: #1c1c1c;
+  background: #d8d8d8;
+  border-color: #aaaaaa;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .food-img {
@@ -216,7 +228,7 @@ body {
 
 .food-content {
   padding: 18px;
-  width : auto;
+  width: auto;
   height: 90px;
 }
 
@@ -228,22 +240,24 @@ body {
 
 .title-price h3 {
   font-size: 20px;
+  color: #000000;
 }
 
 .title-price span {
   font-size: 18px;
   font-weight: bold;
+  color: #555555;
 }
 
 .food-line {
   width: 100%;
   height: 1px;
-  background: rgba(255,255,255,0.2);
+  background: #333333;
   margin: 14px 0;
 }
 
 .food-para {
-  color: #ccc;
+  color: #666;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -252,79 +266,20 @@ body {
   width: 100%;
   margin-top: 18px;
   padding: 12px;
-  border: 2px solid white;
+  border: 1.5px solid #aaaaaa;
   border-radius: 12px;
   background: transparent;
-  color: white;
+  color: #111111;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .add-btn:hover {
-  background: white;
-  color: black;
+  background: #111111;
+  color: #f5f5f5;
+  border-color: #111111;
 }
-
-/* =========================
-   BILL SECTION
-========================= */
-
-.bill-section {
-  width: 70%;
-  padding: 30px;
-  overflow-y: auto;
-}
-
-.bill-title {
-  font-size: 28px;
-  margin-bottom: 30px;
-}
-
-.bill-items {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.bill-item {
-  padding: 16px;
-  border: 2px solid white;
-  border-radius: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #111;
-}
-
-.bill-total {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 2px solid white;
-  display: flex;
-  justify-content: space-between;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.checkout-btn {
-  width: 100%;
-  margin-top: 30px;
-  padding: 16px;
-  border: none;
-  border-radius: 16px;
-  background: white;
-  color: black;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.checkout-btn:hover {
-  transform: scale(1.02);
-}
-
 
 /* =========================
    BILL SECTION
@@ -341,6 +296,7 @@ body {
 .bill-title {
   font-size: 28px;
   font-weight: bold;
+  color: #000000;
 }
 
 /* =========================
@@ -370,25 +326,32 @@ body {
 .bill-input,
 .description-input {
   padding: 12px;
-  border: 2px solid white;
+  border: 1.5px solid #333333;
   border-radius: 12px;
-  background: transparent;
-  color: white;
+  background: #e8e8e8;
+  color: #111111;
   outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.transfer-select:focus,
+.bill-input:focus,
+.description-input:focus {
+  border-color: #999;
 }
 
 .transfer-select option {
-  background: black;
+  background: #e8e8e8;
+  color: #111111;
 }
 
 .bill-input::placeholder,
 .description-input::placeholder {
-  color: #aaa;
+  color: #999;
 }
 
-
 /* =========================
-DESCRIPTION
+   DESCRIPTION
 ========================= */
 
 .description-box {
@@ -399,6 +362,7 @@ DESCRIPTION
 
 .description-box label {
   font-weight: bold;
+  color: #333333;
 }
 
 .description-input {
@@ -412,10 +376,11 @@ DESCRIPTION
 
 .bill-table {
   flex: 1;
-  border: 2px solid white;
+  border: 1.5px solid #333333;
   border-radius: 14px;
   padding: 20px;
   overflow-y: auto;
+  background: #ebebeb;
 }
 
 .bill-table-head {
@@ -423,8 +388,12 @@ DESCRIPTION
   grid-template-columns: 0.5fr 2fr 1fr 1fr;
   font-weight: bold;
   margin-bottom: 20px;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid #333333;
   padding-bottom: 10px;
+  color: #555555;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .bill-row {
@@ -432,6 +401,57 @@ DESCRIPTION
   grid-template-columns: 0.5fr 2fr 1fr 1fr;
   margin-bottom: 14px;
   align-items: center;
+  color: #1a1a1a;
+}
+
+/* =========================
+   BILL ITEMS (legacy)
+========================= */
+
+.bill-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bill-item {
+  padding: 16px;
+  border: 1.5px solid #333333;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e8e8e8;
+}
+
+.bill-total {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1.5px solid #333333;
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: #111111;
+  color: #f5f5f5;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.checkout-btn:hover {
+  transform: scale(1.02);
+  background: #000000;
 }
 
 /* =========================
@@ -446,24 +466,24 @@ DESCRIPTION
 
 .bill-buttons button {
   padding: 15px;
-  border: 2px solid white;
+  border: 1.5px solid #333333;
   border-radius: 14px;
-  background: transparent;
-  color: white;
+  background: #e8e8e8;
+  color: #111111;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .bill-buttons button:hover {
-  background: white;
-  color: black;
+  background: #111111;
+  color: #f5f5f5;
+  border-color: #111111;
 }
 
 /* =========================
    MODAL
 ========================= */
-
 
 .modal-overlay {
   position: fixed;
@@ -471,19 +491,18 @@ DESCRIPTION
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.8);
-
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 999;
+  backdrop-filter: blur(4px);
 }
 
 .food-modal {
   width: 420px;
-  background: #111;
-  border: 2px solid white;
+  background: #e8e8e8;
+  border: 1.5px solid #333333;
   border-radius: 20px;
   padding: 30px;
 }
@@ -491,6 +510,7 @@ DESCRIPTION
 .food-modal h2 {
   margin-bottom: 25px;
   text-align: center;
+  color: #000000;
 }
 
 .food-options {
@@ -498,60 +518,48 @@ DESCRIPTION
   gap: 15px;
   margin: 25px 0;
 }
+
 .option-btn {
   flex: 1;
-}
-.food-options button,
-.close-btn {
   padding: 14px;
-  border: 2px solid white;
+  border: 1.5px solid #aaaaaa;
   border-radius: 12px;
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.food-options button:hover,
-.close-btn:hover {
-  background: white;
-  color: black;
-}
-.option-btn {
-  padding: 14px;
-
-  border: 2px solid white;
-  border-radius: 12px;
-
-  background: transparent;
-  color: white;
-
+  background: #e2e2e2;
+  color: #111111;
   font-size: 15px;
   font-weight: bold;
-
   cursor: pointer;
-
-  transition: 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .option-btn:hover {
-  background: white;
-  color: black;
+  background: #111111;
+  color: #f5f5f5;
+  border-color: #111111;
 }
 
 .active-option {
-  background: black;
-  color: white;
-
-  transform: scale(1.1);
-
-  box-shadow:
-    0 0 22px rgba(37, 26, 26, 0.4);
+  background: #333333;
+  color: #000000;
+  transform: scale(1.05);
+  border-color: #999;
 }
 
 .close-btn {
   width: 100%;
   margin-top: 5px;
+  padding: 14px;
+  border: 1.5px solid #aaaaaa;
+  border-radius: 12px;
+  background: transparent;
+  color: #111111;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #111111;
+  color: #f5f5f5;
 }
 
 .quantity-box {
@@ -561,64 +569,146 @@ DESCRIPTION
   gap: 10px;
   padding-top: 10px;
   padding-bottom: 5px;
-
 }
 
 .quantity-box button {
   width: 30px;
   height: 30px;
-
-  border: 2px solid white;
+  border: 1.5px solid #aaaaaa;
   border-radius: 10px;
-
-  background: transparent;
-  color: white;
-
+  background: #e2e2e2;
+  color: #111111;
   font-size: 22px;
   cursor: pointer;
-
-  transition: 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .quantity-box button:hover {
-  background: white;
-  color: black;
+  background: #111111;
+  color: #f5f5f5;
 }
 
 .quantity-box span {
   font-size: 24px;
   font-weight: bold;
+  color: #000000;
 }
 
-.available-card {
+/* =========================
+   TABLE STATUS CARDS
+========================= */
 
-  border: 4px solid #ff3b3b ;
+.available-card {
+  border: 3px solid #22c55e;
 }
 
 .occupied-card {
-
-  border: 4px solid #00ff88;
-
+  border: 3px solid #ef4444;
 }
 
 .view-btn {
-
   margin-top: 15px;
-
   padding: 8px 18px;
-
   border: none;
-
   border-radius: 10px;
-
-  background: white;
-
-  color: black;
-
+  background: #111111;
+  color: #f5f5f5;
   font-weight: bold;
-
   cursor: pointer;
+  transition: background 0.2s ease;
+}
 
+.view-btn:hover {
+  background: #000000;
+}
+
+/* =========================
+   CONFIRM MODAL
+========================= */
+
+.confirm-modal {
+  width: 420px;
+  background: #f0f0f0;
+  border: 1.5px solid #c0c0c0;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  animation: popup 0.25s ease;
+}
+
+.confirm-modal h2 {
+  margin-bottom: 12px;
+  font-size: 26px;
+  color: #000000;
+}
+
+.confirm-modal p {
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-buttons button {
+  flex: 1;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.confirm-buttons button:hover {
+  opacity: 0.88;
+  transform: scale(0.99);
+}
+
+.confirm-yes {
+  background: #22c55e;
+  color: #fff;
+}
+
+.confirm-no {
+  background: #ef4444;
+  color: #fff;
+}
+
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================
+   SCROLLBAR STYLING
+========================= */
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
 }
 
 /* =========================
@@ -626,7 +716,6 @@ DESCRIPTION
 ========================= */
 
 @media (max-width: 1200px) {
-
   .cards-container,
   .more-cards {
     grid-template-columns: repeat(2, 1fr);
@@ -638,7 +727,6 @@ DESCRIPTION
 }
 
 @media (max-width: 900px) {
-
   .main-layout {
     flex-direction: column;
     height: auto;
@@ -649,7 +737,7 @@ DESCRIPTION
   .bill-section {
     width: 100%;
     border-right: none;
-    border-bottom: 2px solid white;
+    border-bottom: 1.5px solid #333333;
   }
 
   .categories {
@@ -663,7 +751,6 @@ DESCRIPTION
 }
 
 @media (max-width: 768px) {
-
   .navbar {
     padding: 0 20px;
   }
@@ -687,8 +774,4 @@ DESCRIPTION
     padding: 10px 18px;
     font-size: 13px;
   }
-}
-
-body {
-  filter : invert(1)
 }

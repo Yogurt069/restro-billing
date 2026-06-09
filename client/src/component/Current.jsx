@@ -10,7 +10,7 @@ function Current() {
   const fetchTables = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5001/tables"
+        "https://restro-billing-yogurt-co.onrender.com/tables"
       );
 
       const data = await response.json();

@@ -498,6 +498,16 @@ const addFoodWithType = (
       }
 
     };
+      const changeTheme = () =>{
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    
+    // Add the CSS rules as a string
+    style.innerHTML = 'body { filter: invert(100%); }';
+    
+    // Append the style to the document head
+    document.head.appendChild(style);
+  }
     
 
   return (

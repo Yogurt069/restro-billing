@@ -53,6 +53,18 @@ function Current() {
     fetchTableTotalPrice();
   }, []);
 
+  const changeTheme = () =>{
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    
+    // Add the CSS rules as a string
+    style.innerHTML = 'body { filter: invert(100%); }';
+    
+    // Append the style to the document head
+    document.head.appendChild(style);
+  }
+  
+
   return (
     <div className="orders">
       {/* Navbar */}
@@ -62,11 +74,18 @@ function Current() {
           <Menu
             size={28}
             className="menu-icon"
+            onClick={() => changeTheme()}
           />
 
           <h1>THE MOMO HUB</h1>
         </div>
 
+        <button
+          className="order-btn"
+          onClick={() => navigate("/records")}
+        >
+          Bills History
+        </button>
         <button
           className="order-btn"
           onClick={() => navigate("/")}

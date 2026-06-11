@@ -632,6 +632,42 @@ app.get("/check-table-status", async (req, res) => {
   }
 });
 
+app.get("/bill-records", async (req, res) => {
+  try {
+    const BillDetailsResult = await client.query(
+      `
+      SELECT
+          b.*,
+          json_agg(
+              json_build_object(
+                  'order_id', o.order_id,
+                  'food_name', f.food_name,
+                  'quantity', o.quantity,
+                  'unit_price', o.unit_price,
+                  'total_price', o.total_price,
+                  'option_name', COALESCE(fo.option_name, 'No Option')
+              )
+          ) AS orders
+      FROM bills b
+      LEFT JOIN orders o ON b.bill_id = o.bill_id
+      LEFT JOIN foods f ON o.food_id = f.food_id
+      LEFT JOIN food_options fo ON o.option_id = fo.option_id
+      GROUP BY b.bill_id
+      ORDER BY b.bill_id DESC;
+      `
+    )
+
+    const billDetails = BillDetailsResult.rows;
+
+    res.json({
+      billDetails,
+    })
+  } catch (err) {
+    console.log("ERROR FETCHING BILL RECORDS: ", err);
+  }
+})
+
+
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });

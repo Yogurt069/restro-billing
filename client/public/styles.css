@@ -712,6 +712,209 @@ body {
 }
 
 /* =========================
+   RECORDS PAGE
+========================= */
+
+.page-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000000;
+  padding: 30px 60px 20px;
+  border-bottom: 1.5px solid #333333;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 30px 60px 60px;
+}
+
+.record-card {
+  background: #e8e8e8;
+  border: 1.5px solid #333333;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.record-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.record-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 22px 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.record-header:hover {
+  background: #d8d8d8;
+}
+
+.record-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bill-id {
+  font-size: 17px;
+  font-weight: bold;
+  color: #000;
+}
+
+.table-number {
+  color: #777777;
+  font-size: 13px;
+}
+
+.record-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.record-total {
+  font-size: 17px;
+  font-weight: bold;
+  color: #000;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.status-active {
+  background: #22c55e;
+  color: #fff;
+}
+
+.status-paid {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.record-details {
+  border-top: 1.5px solid #cccccc;
+  padding: 25px 30px;
+  background: #f0f0f0;
+  animation: expandRecord 0.2s ease;
+}
+
+.bill-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.bill-info-item {
+  background: #e8e8e8;
+  border: 1.5px solid #cccccc;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #444;
+  font-weight: 500;
+}
+
+.orders-section {
+  background: #e8e8e8;
+  border: 1.5px solid #cccccc;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.order-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.order-row:last-child {
+  border-bottom: none;
+}
+
+.food-name {
+  font-weight: bold;
+  font-size: 15px;
+  color: #111;
+}
+
+.food-option {
+  font-size: 12px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.order-right {
+  text-align: right;
+}
+
+.order-right div:first-child {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.order-qty {
+  color: #888;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.bill-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1.5px solid #333333;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.no-orders {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-size: 14px;
+}
+
+@keyframes expandRecord {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================
    RESPONSIVE
 ========================= */
 

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { Pool } from "pg";
 
 dotenv.config();
+
 const client = new Pool({
   connectionString: process.env.CONNECTION_STRING,
   ssl:{
@@ -14,7 +15,7 @@ const client = new Pool({
 await client.connect();
 
 const app = express();
-const db = new Database("db/cafe.db");
+// const db = new Database("db/cafe.db");
 const port = 5001;
 app.use(cors());
 app.use(express.json());

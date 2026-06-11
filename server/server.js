@@ -19,11 +19,7 @@ const port = 5001;
 app.use(cors());
 app.use(express.json());
 
-const cat = await client.query(`
-        SELECT*FROM categories
-        `);
-  
-console.log(cat);
+
 
 app.get("/categories", async (req, res) => {
   const categories = await client.query(`

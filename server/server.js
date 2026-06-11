@@ -187,7 +187,7 @@ app.post("/kot", async (req, res) => {
           current_bill_id = $1
         WHERE table_number = $2
       `,[billId, transferTable]
-    );
+      );
 
       await client.query(
         `
@@ -195,7 +195,7 @@ app.post("/kot", async (req, res) => {
         SET table_number = $1
         WHERE bill_id = $2
       `,[transferTable, billId]
-    );
+      );
     }
     //bill total update
     await client.query(
@@ -606,6 +606,40 @@ app.get("/bill-details/:billId", async (req, res) => {
       error: err.message,
     });
   } 
+});
+
+
+app.get("/tables/:billId/total", async (req, res) => {
+  try {
+    const { billId } = req.params;
+  
+    if (billId === "null") {
+      return res.json({
+        total: 0,
+      });
+    }
+
+    const totalResult = await client.query(
+      `
+        SELECT total_cost
+        FROM bills
+        WHERE bill_id = $1
+      `, [billId]
+    );
+    let total = 0;
+    if(totalResult.rows[0]){
+      total = totalResult.rows[0].total_cost;
+    }    
+    res.json({
+      total,
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 });
 
 app.listen(port, () => {

@@ -222,7 +222,7 @@ app.post("/kot", async (req, res) => {
 
 app.post("/bill", async (req, res) => {
   try {
-    const { tableNumber, customerName, description, parcel, items } = req.body;
+    const { tableNumber, customerName, description, parcel, items, cash } = req.body;
 
     // =====================
     // FIND ACTIVE BILL
@@ -257,18 +257,19 @@ app.post("/bill", async (req, res) => {
             customer_name,
             description,
             parcel,
+            cash,
             status,
             total_cost,
             created_at
           )
           VALUES (
-            $1, $2, $3, $4,
+            $1, $2, $3, $4, $5,
             'ACTIVE',
             0,
             CURRENT_TIMESTAMP
           )
         `,
-        [tableNumber, customerName, description, parcel ? 1 : 0]
+        [tableNumber, customerName, description, parcel ? 1 : 0, cash ? 1 : 0]
       );
 
       billId = billResult.rows[0].bill_id;

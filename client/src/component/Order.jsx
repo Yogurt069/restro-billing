@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {useParams} from "react-router-dom";
+import BillItems from "./BillItems";
+import Modal from "./Modal"
 function Order() {
 
   // =========================
@@ -806,52 +808,7 @@ const addFoodWithType = (
               <span>PRICE</span>
 
             </div>
-
-            <div className="bill-items">
-
-              {billItems.map(
-                (item, index) => (
-
-                  <div
-                    className="bill-row"
-                    key={index}
-                  >
-
-                    <span>
-                      {index + 1}
-                    </span>
-
-                    <span>
-
-                      {item.food_name}
-
-                      {item.selectedOption
-                        ? ` (${item.selectedOption})`
-                        : ``
-                      }
-
-                    </span>
-
-                    <span>
-                      {item.qty}
-                    </span>
-
-                    <span>
-
-                      ₹
-
-                      {
-                        item.finalPrice
-                      }
-
-                    </span>
-
-                  </div>
-
-                )
-              )}
-
-            </div>
+            <BillItems billItems={billItems} />
 
           </div>
 
@@ -903,119 +860,19 @@ const addFoodWithType = (
       ===================== */}
 
       {showModal && (
+        <Modal
+          selectedFood={selectedFood}
+          currentOptions={currentOptions}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          selectedOptionBtn={selectedOptionBtn}
+          setSelectedOptionBtn={setSelectedOptionBtn}
+          addFoodOption={addFoodOption}
+          setAddFoodOption={setAddFoodOption}
+          addFoodWithType={addFoodWithType}
+          setShowModal={setShowModal}
+        />
 
-        <div className="modal-overlay">
-
-          <div className="food-modal">
-
-            <h2>
-
-              {
-                selectedFood.food_name
-              }
-
-            </h2>
-
-            {/* OPTIONS */}
-
-            <div className="food-options">
-
-              {currentOptions.map(
-                (
-                  option,
-                  index
-                ) => (
-
-                  <button
-                    key={index}
-
-                    className={`option-btn ${
-                      selectedOptionBtn ===
-                      option.option_name
-                        ? "active-option"
-                        : ""
-                    }`}
-
-                    onClick={() => {
-
-                      setSelectedOptionBtn(
-                        option.option_name
-                      );
-
-                      setAddFoodOption(
-                        option
-                      );
-
-                    }}
-                  >
-
-                    {
-                      option.option_name
-                    }
-
-                    <br />
-
-                    {option.extra_price > 0 &&
-                      `(+₹${option.extra_price})`
-                    }
-
-                  </button>
-
-                )
-              )}
-
-            </div>
-
-            {/* QUANTITY */}
-
-            <div className="quantity-box">
-
-              <button
-                onClick={() =>
-                  quantity > 1 &&
-                  setQuantity(
-                    quantity - 1
-                  )
-                }
-              >
-                -
-              </button>
-
-              <span>
-                {quantity}
-              </span>
-              <button
-                onClick={() =>
-                  setQuantity(
-                    quantity + 1
-                  )
-                }
-              >
-                +
-              </button>
-            </div>
-
-            {/* BUTTONS */}
-            <button
-              className="close-btn"
-              onClick={() =>
-                addFoodWithType(
-                  addFoodOption
-                )
-              }
-            >
-              ORDER
-            </button>
-            <button
-              className="close-btn"
-              onClick={() =>
-                setShowModal(false)
-              }
-            >
-              CLOSE
-            </button>
-          </div>
-        </div>
       )}
 
       {showConfirm && (
